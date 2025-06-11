@@ -1,0 +1,5 @@
+/*
+This is a placeholder for favicon.ico.
+For a production deployment, you should replace this with an actual favicon file.
+You can create a favicon using tools like favicon.io or realfavicongenerator.net
+*/
