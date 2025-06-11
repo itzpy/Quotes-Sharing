@@ -136,3 +136,23 @@ Before deploying, add the following files to your `public` directory:
 - `logo512.png` - A 512x512 px logo for PWA and app icons
 
 Placeholder text files have been added to remind you to create these assets.
+
+## Supabase Setup Instructions
+
+This app uses Supabase for data storage and authentication. Follow these steps to set up your Supabase backend:
+
+1. **Create a Supabase account** at [supabase.com](https://supabase.com)
+2. **Create a new project** and note your project URL and anon/public API key
+3. **Update the credentials** in `src/supabaseClient.js`:
+   ```javascript
+   const supabaseUrl = 'YOUR_SUPABASE_URL'
+   const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY'
+   ```
+4. **Set up your database tables** by running the SQL in `supabase_schema.sql` in the Supabase SQL editor
+5. **Create an admin user** in the Authentication section of your Supabase dashboard
+6. **Install the Supabase package** by running:
+   ```
+   npm install @supabase/supabase-js
+   ```
+
+Note: Only you (with admin credentials) can add new quotes, while anyone can read quotes and add comments.

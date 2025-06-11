@@ -1,12 +1,15 @@
 import React from 'react';
 import QuotesApp from './components/QuotesApp';
+import { AuthProvider } from './context/AuthContext';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <QuotesApp />
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <QuotesApp />
+      </div>
+    </AuthProvider>
   );
 }
 
