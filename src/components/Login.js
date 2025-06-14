@@ -5,17 +5,12 @@ const Login = ({ onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const { signIn } = useAuth();
-
+  const { login } = useAuth();
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       setError(null);
-      const { error } = await signIn({ 
-        email, 
-        password 
-      });
-      if (error) throw error;
+      await login(email, password);
       onClose();
     } catch (error) {
       setError(error.message || 'Error logging in');

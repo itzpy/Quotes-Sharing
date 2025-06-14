@@ -1,30 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, MessageCircle, Plus, User, Calendar, X } from 'lucide-react';
+import { Heart, MessageCircle, Plus, User, Calendar, X, LogIn, LogOut } from 'lucide-react';
 import { supabase } from '../supabaseClient';
+import { useAuth } from '../context/AuthContext';
+import Login from './Login';
 
 const QuotesApp = () => {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showLoginForm, setShowLoginForm] = useState(false);
   const [newQuote, setNewQuote] = useState({ text: '', author: '', postedBy: '' });
   const [commentInputs, setCommentInputs] = useState({});
-  const [user, setUser] = useState(null);
-
-  // Check for user session on load
-  useEffect(() => {
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user || null);
-    };
-    getSession();
-
-    // Set up auth listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
-    });
-
-    return () => subscription?.unsubscribe();
-  }, []);
+  const { user, logout } = useAuth();
 
   // Fetch quotes from Supabase
   useEffect(() => {
@@ -199,20 +186,19 @@ const QuotesApp = () => {
       alert('Error adding comment. Please try again.');
     }
   };
-
-  // Handle login/logout (simplified - you'll want a proper login page)
-  const handleLogin = async () => {
-    // This would typically be in a login form component
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: 'your-admin-email@example.com',
-      password: 'your-password'
-    });
-    
-    if (error) alert(error.message);
+  // Use the AuthContext's logout function
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Error signing out:', error);
+      alert('Error signing out. Please try again.');
+    }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  // Toggle the login modal
+  const toggleLoginModal = () => {
+    setShowLoginForm(!showLoginForm);
   };
 
   return (
@@ -236,10 +222,9 @@ const QuotesApp = () => {
               >
                 <Plus size={16} />
               </button>
-            </div>
-          ) : (
+            </div>          ) : (
             <button 
-              onClick={handleLogin}
+              onClick={toggleLoginModal}
               className="bg-green-500 text-white px-3 py-1 rounded"
             >
               Admin Login
@@ -357,8 +342,12 @@ const QuotesApp = () => {
               </button>
             </div>
           </div>
-        ))}
-      </div>
+        ))}      </div>
+      
+      {/* Login Modal */}
+      {showLoginForm && (
+        <Login onClose={() => setShowLoginForm(false)} />
+      )}
     </div>
   );
 };
