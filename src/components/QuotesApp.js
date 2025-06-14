@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Heart, MessageCircle, Plus, User, Calendar, X, LogIn, LogOut } from 'lucide-react';
+import { Heart, MessageCircle, Plus, User, Calendar, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import Login from './Login';

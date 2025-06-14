@@ -17,7 +17,8 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 REM Build the project
-echo Building project...
+echo Building project (CI=false)...
+set CI=false
 call npm run build
 if %ERRORLEVEL% NEQ 0 (
     echo Build failed.
