@@ -1,5 +1,0 @@
-/*
-This is a placeholder for logo192.png.
-For a production deployment, you should replace this with an actual 192x192 PNG image.
-You can create a logo using tools like Figma, Photoshop, or Canva.
-*/
