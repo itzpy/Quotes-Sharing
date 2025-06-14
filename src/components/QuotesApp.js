@@ -10,7 +10,6 @@ const QuotesApp = () => {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  const { theme } = useTheme(); // Get current theme
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [newQuote, setNewQuote] = useState({ text: '', author: '', postedBy: '' });
   const [commentInputs, setCommentInputs] = useState({});
