@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Heart, MessageCircle, Plus, User, Calendar, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import Login from './Login';
+import ThemeToggle from './ThemeToggle';
 
 const QuotesApp = () => {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const { theme } = useTheme(); // Get current theme
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [newQuote, setNewQuote] = useState({ text: '', author: '', postedBy: '' });
   const [commentInputs, setCommentInputs] = useState({});
@@ -200,143 +203,134 @@ const QuotesApp = () => {
   const toggleLoginModal = () => {
     setShowLoginForm(!showLoginForm);
   };
-
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-4xl mx-auto p-4 text-gray-800 dark:text-white">
       {/* Admin controls */}
       <div className="mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">QuoteShare</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold">QuoteShare</h1>
+          <ThemeToggle />
+        </div>
         <div>
           {user ? (
             <div className="flex items-center gap-2">
-              <span>Logged in as {user.email}</span>
+              <span className="dark:text-gray-300">Logged in as {user.email}</span>
               <button 
                 onClick={handleLogout}
-                className="bg-red-500 text-white px-3 py-1 rounded"
+                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
               >
                 Logout
-              </button>
-              <button 
+              </button>              <button 
                 onClick={() => setShowAddForm(!showAddForm)}
-                className="bg-blue-500 text-white p-2 rounded-full"
+                className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full transition-colors"
               >
                 <Plus size={16} />
               </button>
             </div>          ) : (
             <button 
               onClick={toggleLoginModal}
-              className="bg-green-500 text-white px-3 py-1 rounded"
+              className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded transition-colors"
             >
               Admin Login
             </button>
           )}
         </div>
-      </div>
-
-      {/* Loading state */}
-      {loading && <p className="text-center py-8">Loading quotes...</p>}
+      </div>      {/* Loading state */}
+      {loading && <p className="text-center py-8 dark:text-gray-300">Loading quotes...</p>}
 
       {/* Add quote form */}
       {showAddForm && user && (
-        <div className="mb-8 p-4 bg-white shadow rounded-lg">
+        <div className="mb-8 p-4 bg-white dark:bg-gray-800 shadow rounded-lg transition-colors">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold">Add New Quote</h2>
-            <button onClick={() => setShowAddForm(false)} className="text-gray-500">
+            <h2 className="text-lg font-bold dark:text-white">Add New Quote</h2>
+            <button onClick={() => setShowAddForm(false)} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
               <X size={20} />
             </button>
-          </div>
-          <div className="space-y-4">
+          </div>          <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Quote</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Quote</label>
               <textarea
                 value={newQuote.text}
                 onChange={(e) => setNewQuote({...newQuote, text: e.target.value})}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-white transition-colors"
                 rows="3"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Author</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Author</label>
               <input
                 type="text"
                 value={newQuote.author}
                 onChange={(e) => setNewQuote({...newQuote, author: e.target.value})}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-white transition-colors"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Posted By</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Posted By</label>
               <input
                 type="text"
                 value={newQuote.postedBy}
                 onChange={(e) => setNewQuote({...newQuote, postedBy: e.target.value})}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                className="mt-1 block w-full border border-gray-300 dark:border-gray-600 rounded-md shadow-sm p-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-white transition-colors"
               />
-            </div>
-            <button
+            </div>            <button
               onClick={handleAddQuote}
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
             >
               Add Quote
             </button>
           </div>
         </div>
-      )}
-
-      {/* Quotes list */}
+      )}      {/* Quotes list */}
       <div className="space-y-6">
         {quotes.map(quote => (
-          <div key={quote.id} className="bg-white shadow rounded-lg p-6">
-            <div className="mb-4">
-              <p className="text-lg font-medium mb-2">"{quote.text}"</p>
-              <p className="text-gray-600">- {quote.author}</p>
+          <div key={quote.id} className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 transition-colors">            <div className="mb-4">
+              <p className="text-lg font-medium mb-2 dark:text-white">"{quote.text}"</p>
+              <p className="text-gray-600 dark:text-gray-400">- {quote.author}</p>
             </div>
-            <div className="flex items-center text-sm text-gray-500 mb-4">
+            <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
               <User size={16} className="mr-1" />
               <span className="mr-4">{quote.postedBy}</span>
               <Calendar size={16} className="mr-1" />
               <span>{quote.postedAt}</span>
-            </div>
-            <div className="flex items-center mb-6">
+            </div>            <div className="flex items-center mb-6">
               <button 
                 onClick={() => toggleLike(quote.id)} 
-                className={`flex items-center mr-4 ${quote.liked ? 'text-red-500' : 'text-gray-500'}`}
+                className={`flex items-center mr-4 ${quote.liked ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'} hover:text-red-500 transition-colors`}
               >
                 <Heart size={16} className="mr-1" fill={quote.liked ? "currentColor" : "none"} />
                 <span>{quote.likes}</span>
               </button>
-              <div className="flex items-center text-gray-500">
+              <div className="flex items-center text-gray-500 dark:text-gray-400">
                 <MessageCircle size={16} className="mr-1" />
                 <span>{quote.comments.length}</span>
               </div>
-            </div>
-            {quote.comments.length > 0 && (
+            </div>            {quote.comments.length > 0 && (
               <div className="mb-4">
-                <h3 className="font-medium text-sm mb-2">Comments</h3>
+                <h3 className="font-medium text-sm mb-2 dark:text-white">Comments</h3>
                 <div className="space-y-2">
                   {quote.comments.map(comment => (
-                    <div key={comment.id} className="bg-gray-50 p-2 rounded">
+                    <div key={comment.id} className="bg-gray-50 dark:bg-gray-700 p-2 rounded transition-colors">
                       <div className="flex justify-between">
-                        <span className="font-medium text-sm">{comment.user}</span>
-                        <span className="text-xs text-gray-500">{comment.time}</span>
+                        <span className="font-medium text-sm dark:text-gray-200">{comment.user}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">{comment.time}</span>
                       </div>
-                      <p className="text-sm">{comment.text || comment.content}</p>
+                      <p className="text-sm dark:text-gray-300">{comment.text || comment.content}</p>
                     </div>
                   ))}
                 </div>
               </div>
-            )}
-            <div className="flex">
+            )}            <div className="flex">
               <input
                 type="text"
                 value={commentInputs[quote.id] || ''}
                 onChange={(e) => setCommentInputs({...commentInputs, [quote.id]: e.target.value})}
                 placeholder="Add a comment..."
-                className="flex-1 border border-gray-300 rounded-l-md p-2 text-sm"
+                className="flex-1 border border-gray-300 dark:border-gray-600 rounded-l-md p-2 text-sm bg-white dark:bg-gray-700 text-gray-800 dark:text-white transition-colors"
               />
               <button
                 onClick={() => addComment(quote.id)}
-                className="bg-blue-500 text-white px-4 rounded-r-md hover:bg-blue-600"
+                className="bg-blue-500 text-white px-4 rounded-r-md hover:bg-blue-600 transition-colors"
               >
                 Post
               </button>
